@@ -46,7 +46,6 @@ int main(){
             ntohs(farAddr.sin_port));
         
         if((retcode = read(s1, buffer, BUFFERSIZE)) > 0){
-            //buffer[retcode-1] = '\0';
             printf("Client asks %s\n", buffer);
         }
 
