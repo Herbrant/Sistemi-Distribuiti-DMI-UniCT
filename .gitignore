@@ -1,6 +1,9 @@
 *.out
 *.class
+*.war
 Server
 server
 Client
 client
+Target
+target
