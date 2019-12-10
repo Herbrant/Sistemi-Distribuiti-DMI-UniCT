@@ -11,9 +11,9 @@
 #define N_SERIE 2
 #define LOCALADDR "127.0.0.1"
 
-int checkSerie(char** listaserie, int* listaepisodi, char* serie, int n){
+int checkSerie(char** listaserie, int* listaepisodi, char* serie, char* n){
     for(int i = 0; i < N_SERIE; i++)
-        if(strcmp(serie, listaserie[i]) == 0 && listaepisodi[i] >= n)
+        if((strcmp(serie, listaserie[i]) == 0) && (listaepisodi[i] >= atoi(n)))
             return 1;
     return 0;
 }
@@ -27,6 +27,7 @@ int main(){
     char* lista_serietv[N_SERIE] = {"friends", "supernatural"};
     int lista_episodi[N_SERIE] = {100, 200};
     char buffer[BUFFERSIZE], message[BUFFERSIZE];
+    char* serie, *episodio;
 
     //Creazione socket
     if((sockfd = socket(AF_INET, SOCK_STREAM, 0)) == -1){
@@ -53,17 +54,18 @@ int main(){
             ntohs(farAddr.sin_port));
         
         if((retcode = read(s1, buffer, BUFFERSIZE)) > 0){
-            buffer[retcode-1] = '\0';
-
+            buffer[retcode] = '\0';
             printf("Client asks %s\n", buffer);
 
-            char* serie = strtok(buffer, ",");
-            int episodio = atoi(strtok(NULL, ","));
-
-            if(checkSerie(lista_serietv, lista_episodi,serie, episodio))
-                strcpy(message, "DISPONIBILE\n");
+            if((serie = strtok(buffer, ",")) && (episodio = strtok(NULL, ","))){
+                
+                if(checkSerie(lista_serietv, lista_episodi, serie, episodio))
+                    strcpy(message, "DISPONIBILE\n");
+                else
+                    strcpy(message, "NON DISPONIBILE\n");
+            }
             else
-                strcpy(message, "NON DISPONIBILE\n");
+                strcpy(message, "ERRORE NELLA RICHIESTA\n");
         }
         else
             strcpy(message, "ERRORE NELLA RICHIESTA\n");
