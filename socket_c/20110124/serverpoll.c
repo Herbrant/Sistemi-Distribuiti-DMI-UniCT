@@ -34,7 +34,7 @@ int main(void){
             ntohs(farAddr.sin_port));
         
         if((retcode = read(s1, buffer, BUFFERSIZE)) > 0){
-            //buffer[retcode] = '\0';
+            buffer[retcode] = '\0';
 
             printf("Client asks %s\n", buffer);
 
@@ -46,7 +46,7 @@ int main(void){
                     strcat(msg, ", ");
                 }
                 strcat(msg, animali[N-1]);
-                msg[strlen(msg)-1] = '\n';
+                msg[strlen(msg)] = '\n';
             }
             else if(buffer[0] == 'V'){
                 
@@ -68,7 +68,7 @@ int main(void){
         else
             strcpy(msg, "Error\n");   
 
-        write(s1, msg, strlen(msg));
+        write(s1, msg, strlen(msg)+1);
         close(s1);
     }
     free(tmp);
